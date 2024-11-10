@@ -14,7 +14,7 @@ export interface PaginatedDocs<T> {
 export interface PythonCard {
   id: string;
   title: string;
-  description: Array<{ children: Array<{ text: string }> }>;
-  category: string;
-  codeExample: string;
+  description?: Array<{ children: Array<{ text: string }> }>; // Opcional
+  category?: string; // Opcional
+  codeExample?: string; // Opcional
 }

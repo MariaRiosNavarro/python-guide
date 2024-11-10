@@ -1,21 +1,23 @@
+import { Users } from "./collections/Users";
+import { PythonCards } from "./collections/PythonCards";
+
 import { buildConfig } from "payload/config";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import path from "path";
-import { pythonCards } from "./collections/PythonCards";
-import { Users } from "./collections/Users";
+
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { slateEditor } from "@payloadcms/richtext-slate";
 
 export default buildConfig({
+  collections: [Users, PythonCards],
+
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000",
+
   admin: {
     bundler: webpackBundler(),
     user: "users", // Aquí referenciamos la colección de usuarios
   },
-  collections: [
-    Users, // Añadimos la colección de usuarios
-    pythonCards,
-  ],
+
   typescript: {
     outputFile: path.resolve(__dirname, "../types/payload-types.ts"),
   },
@@ -26,5 +28,14 @@ export default buildConfig({
   upload: {
     disableLocalStorage: true,
     disableImageSizes: true,
+  },
+
+  // Añade esta sección de onInit
+  onInit: (payload) => {
+    payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
+    console.log(
+      "Available collections after init:",
+      Object.keys(payload.collections || {})
+    );
   },
 });
